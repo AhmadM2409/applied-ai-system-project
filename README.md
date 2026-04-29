@@ -20,6 +20,28 @@ Required AI feature selected: Reliability / Testing System.
 
 Supporting enhancement: Specialized model behavior through improved data and classification rules.
 
+## Reliability and Evaluation
+
+This system includes a reliability layer to ensure predictions are not only generated, but also evaluated and explained.
+
+Key additions:
+
+- Confidence scoring:
+  Both the rule-based and ML models return a confidence value for each prediction.
+  - Rule-based confidence is based on the difference between positive and negative scores.
+  - ML confidence is based on predicted probabilities.
+
+- Guardrails:
+  The rule-based model returns "uncertain" when confidence is too low, preventing unreliable predictions.
+
+- Evaluation script:
+  The project includes an evaluator script that:
+  - runs both models on the dataset
+  - prints predictions, true labels, and confidence scores
+  - computes accuracy and average confidence
+
+These additions allow the system to demonstrate reliability, transparency, and measurable performance rather than just producing outputs.
+
 ---
 
 ## Repo Structure
