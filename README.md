@@ -142,4 +142,4 @@ This project showed that reliability is more than producing a label. Adding conf
 
 ## Loom Walkthrough
 
-Loom video: [Add Loom walkthrough link here]
+Loom video: https://drive.google.com/file/d/14QWU6pTADit_WnjrgXtzy5XeJdVj5wxk/view?usp=sharing
