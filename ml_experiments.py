@@ -97,6 +97,23 @@ def predict_single_text(
     return pred
 
 
+def predict_with_confidence(
+    text: str,
+    vectorizer: CountVectorizer,
+    model: LogisticRegression,
+) -> Tuple[str, float]:
+    """
+    Predict the mood label and confidence for a single text string.
+    """
+    X = vectorizer.transform([text])
+    probabilities = model.predict_proba(X)[0]
+    best_index = probabilities.argmax()
+    label = model.classes_[best_index]
+    confidence = float(probabilities[best_index])
+
+    return label, confidence
+
+
 def run_interactive_loop(
     vectorizer: CountVectorizer,
     model: LogisticRegression,

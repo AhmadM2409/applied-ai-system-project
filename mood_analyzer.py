@@ -102,7 +102,19 @@ class MoodAnalyzer:
     # Label prediction
     # ---------------------------------------------------------------------
 
-    def predict_label(self, text: str) -> str:
+    def get_confidence(self, text: str) -> float:
+        """
+        Estimate confidence from the gap between positive and negative scores.
+        """
+        scores = self.score_text(text)
+        positive_score = scores["positive_score"]
+        negative_score = scores["negative_score"]
+        total_tokens = len(scores["tokens"])
+
+        confidence = abs(positive_score - negative_score) / max(total_tokens, 1)
+        return min(max(float(confidence), 0.0), 1.0)
+
+    def predict_label(self, text: str, return_confidence: bool = False):
         """
         Turn the numeric score for a piece of text into a mood label.
 
@@ -121,14 +133,22 @@ class MoodAnalyzer:
         scores = self.score_text(text)
         positive_score = scores["positive_score"]
         negative_score = scores["negative_score"]
+        confidence = self.get_confidence(text)
 
-        if positive_score > negative_score:
-            return "positive"
-        if negative_score > positive_score:
-            return "negative"
         if positive_score == 0 and negative_score == 0:
-            return "neutral"
-        return "mixed"
+            label = "neutral"
+        elif confidence < 0.2:
+            label = "uncertain"
+        elif positive_score > negative_score:
+            label = "positive"
+        elif negative_score > positive_score:
+            label = "negative"
+        else:
+            label = "mixed"
+
+        if return_confidence:
+            return label, confidence
+        return label
 
     # ---------------------------------------------------------------------
     # Explanations (optional but recommended)
