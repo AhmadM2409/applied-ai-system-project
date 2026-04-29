@@ -7,13 +7,24 @@ to train a tiny text classifier on the same SAMPLE_POSTS and
 TRUE_LABELS that you use with the rule based model.
 """
 
-from typing import List, Tuple
+import argparse
+from collections import Counter
+from typing import List, Optional, Tuple
 
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
 
+from data_loader import load_external_dataset
 from dataset import SAMPLE_POSTS, TRUE_LABELS
+
+
+def safe_for_console(value) -> str:
+    """
+    Convert text to a form that Windows terminals can print safely.
+    """
+    return str(value).encode("ascii", errors="backslashreplace").decode("ascii")
 
 
 def train_ml_model(
@@ -49,6 +60,50 @@ def train_ml_model(
     return vectorizer, model
 
 
+def load_training_data(
+    external_dataset_path: Optional[str] = None,
+    max_samples: int = 20000,
+) -> Tuple[List[str], List[str]]:
+    """
+    Load external training data when a path is provided, otherwise use SAMPLE_POSTS.
+    """
+    if external_dataset_path:
+        print(f"Using external dataset: {external_dataset_path}")
+        texts, labels = load_external_dataset(external_dataset_path, max_samples)
+    else:
+        print("Using internal dataset")
+        texts = list(SAMPLE_POSTS)
+        labels = list(TRUE_LABELS)
+
+    print(f"Dataset size: {len(texts)}")
+    return texts, labels
+
+
+def split_dataset(
+    texts: List[str],
+    labels: List[str],
+    test_size: float = 0.2,
+) -> Tuple[List[str], List[str], List[str], List[str]]:
+    """
+    Split the dataset into train and test sets.
+    """
+    label_counts = Counter(labels)
+    test_count = max(1, int(round(len(texts) * test_size)))
+    can_stratify = (
+        len(label_counts) > 1
+        and min(label_counts.values()) >= 2
+        and test_count >= len(label_counts)
+    )
+
+    return train_test_split(
+        texts,
+        labels,
+        test_size=test_size,
+        random_state=42,
+        stratify=labels if can_stratify else None,
+    )
+
+
 def evaluate_on_dataset(
     texts: List[str],
     labels: List[str],
@@ -76,7 +131,10 @@ def evaluate_on_dataset(
         is_correct = pred_label == true_label
         if is_correct:
             correct += 1
-        print(f'"{text}" -> predicted={pred_label}, true={true_label}')
+        print(
+            f'"{safe_for_console(text)}" -> '
+            f"predicted={pred_label}, true={true_label}"
+        )
 
     accuracy = accuracy_score(labels, preds)
     print(f"\nAccuracy on this dataset: {accuracy:.2f}")
@@ -139,14 +197,30 @@ def run_interactive_loop(
 
 
 if __name__ == "__main__":
-    print("Training an ML model on SAMPLE_POSTS and TRUE_LABELS from dataset.py...")
-    print("Make sure you have added enough labeled examples before running this.\n")
+    parser = argparse.ArgumentParser(description="Train and evaluate the ML Mood Machine.")
+    parser.add_argument(
+        "external_dataset",
+        nargs="?",
+        help="Optional path to an external sentiment CSV dataset.",
+    )
+    parser.add_argument(
+        "--max-samples",
+        type=int,
+        default=20000,
+        help="Maximum number of external rows to load.",
+    )
+    args = parser.parse_args()
 
-    # Train the model on the current dataset.
-    vectorizer, model = train_ml_model(SAMPLE_POSTS, TRUE_LABELS)
+    texts, labels = load_training_data(args.external_dataset, args.max_samples)
+    train_texts, test_texts, train_labels, test_labels = split_dataset(texts, labels)
 
-    # Evaluate on the same dataset (training accuracy).
-    evaluate_on_dataset(SAMPLE_POSTS, TRUE_LABELS, vectorizer, model)
+    print(f"Training size: {len(train_texts)}")
+    print(f"Test size: {len(test_texts)}\n")
+
+    vectorizer, model = train_ml_model(train_texts, train_labels)
+
+    test_accuracy = evaluate_on_dataset(test_texts, test_labels, vectorizer, model)
+    print(f"Test accuracy: {test_accuracy:.2f}")
 
     # Let the user try their own examples.
     run_interactive_loop(vectorizer, model)

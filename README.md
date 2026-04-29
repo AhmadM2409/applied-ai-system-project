@@ -80,6 +80,18 @@ Run the reliability evaluator:
 python evaluator.py
 ```
 
+## External Dataset Support
+
+- The ML model can optionally train on a larger external dataset.
+- This improves generalization compared to the small built-in dataset.
+
+Example:
+
+```bash
+python ml_experiments.py data/sentimentdataset.csv
+python evaluator.py data/sentimentdataset.csv
+```
+
 ## Sample Interactions
 
 Example rule-based interactions:
