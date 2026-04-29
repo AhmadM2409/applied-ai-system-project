@@ -42,6 +42,17 @@ Key additions:
 
 These additions allow the system to demonstrate reliability, transparency, and measurable performance rather than just producing outputs.
 
+## System Architecture
+
+The system architecture is documented in `assets/system_architecture.md`.
+
+At a high level, the system takes a short text input and sends it through two mood classification paths:
+
+- A rule-based classifier using word matching, confidence scoring, and guardrails.
+- A machine learning classifier using CountVectorizer and Logistic Regression.
+
+The evaluator compares both systems against the labeled dataset, reports accuracy and average confidence, and supports human review for model-card reflection.
+
 ---
 
 ## Repo Structure
