@@ -17,12 +17,32 @@ POSITIVE_WORDS = [
     "great",
     "good",
     "love",
+    "loved",
+    "loving",
     "excited",
     "awesome",
     "fun",
     "chill",
     "relaxed",
     "amazing",
+    "hopeful",
+    "proud",
+    "grateful",
+    "calm",
+    "peaceful",
+    "confident",
+    "joyful",
+    "glad",
+    "best",
+    "fantastic",
+    "perfect",
+    "passed",
+    "learned",
+    "win",
+    "winning",
+    "yay",
+    "lol",
+    "vibes",
 ]
 
 NEGATIVE_WORDS = [
@@ -34,8 +54,25 @@ NEGATIVE_WORDS = [
     "upset",
     "tired",
     "stressed",
+    "stress",
     "hate",
     "boring",
+    "anxious",
+    "worried",
+    "lonely",
+    "overwhelmed",
+    "frustrated",
+    "annoyed",
+    "miserable",
+    "rough",
+    "exhausted",
+    "nervous",
+    "crying",
+    "pain",
+    "fail",
+    "failed",
+    "ugh",
+    "meh",
 ]
 
 # ---------------------------------------------------------------------
@@ -50,6 +87,24 @@ SAMPLE_POSTS = [
     "This is fine",
     "So excited for the weekend",
     "I am not happy about this",
+    "I feel proud of my work today",
+    "This project is going great",
+    "Lowkey stressed but kind of proud of myself",
+    "Highkey loving these chill vibes",
+    "No cap this homework was awful",
+    "I passed the quiz yay",
+    "I am tired and overwhelmed",
+    "The meeting starts at three",
+    "Okay, sure, that was just perfect",
+    "I absolutely love getting stuck in traffic",
+    "Not bad, I guess",
+    "I am not excited for tomorrow",
+    "I feel calm and relaxed tonight",
+    "I failed the test but learned a lot",
+    "This is just another normal Tuesday",
+    "I am crying but also laughing lol",
+    "Best day ever :)",
+    "I feel lonely tonight :(",
 ]
 
 # Human labels for each post above.
@@ -65,6 +120,24 @@ TRUE_LABELS = [
     "neutral",   # "This is fine"
     "positive",  # "So excited for the weekend"
     "negative",  # "I am not happy about this"
+    "positive",  # "I feel proud of my work today"
+    "positive",  # "This project is going great"
+    "mixed",     # "Lowkey stressed but kind of proud of myself"
+    "positive",  # "Highkey loving these chill vibes"
+    "negative",  # "No cap this homework was awful"
+    "positive",  # "I passed the quiz yay"
+    "negative",  # "I am tired and overwhelmed"
+    "neutral",   # "The meeting starts at three"
+    "negative",  # "Okay, sure, that was just perfect"
+    "negative",  # "I absolutely love getting stuck in traffic"
+    "mixed",     # "Not bad, I guess"
+    "negative",  # "I am not excited for tomorrow"
+    "positive",  # "I feel calm and relaxed tonight"
+    "mixed",     # "I failed the test but learned a lot"
+    "neutral",   # "This is just another normal Tuesday"
+    "mixed",     # "I am crying but also laughing lol"
+    "positive",  # "Best day ever :)"
+    "negative",  # "I feel lonely tonight :("
 ]
 
 # TODO: Add 5-10 more posts and labels.
