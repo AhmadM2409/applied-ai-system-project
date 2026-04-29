@@ -4,6 +4,22 @@ The Mood Machine is a simple text classifier that begins with a rule based appro
 
 This lab gives you hands on experience with how basic systems work, where they break, and how different modeling choices affect fairness and accuracy. You will edit code, add data, run experiments, and write a short model card reflection.
 
+## Final Project Direction
+
+This project extends the original Mood Machine starter lab into a reliability-focused applied AI system.
+
+The final system will improve mood classification by adding:
+- a more specialized mood dataset
+- improved rule-based classification logic
+- machine learning comparison
+- confidence scoring
+- guardrails for uncertain or risky inputs
+- structured evaluation/testing
+
+Required AI feature selected: Reliability / Testing System.
+
+Supporting enhancement: Specialized model behavior through improved data and classification rules.
+
 ---
 
 ## Repo Structure
