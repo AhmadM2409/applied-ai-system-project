@@ -1,116 +1,133 @@
-# The Mood Machine
+# The Mood Machine: Reliability-Focused Mood Classification
 
-The Mood Machine is a simple text classifier that begins with a rule based approach and can optionally be extended with a small machine learning model. It tries to guess whether a short piece of text sounds **positive**, **negative**, **neutral**, or even **mixed** based on patterns in your data.
+The Mood Machine is a short-text mood classification project that compares a transparent rule-based classifier with a small machine learning classifier. The final version adds confidence scoring, guardrails, and an evaluator script so predictions can be measured instead of only displayed.
 
-This lab gives you hands on experience with how basic systems work, where they break, and how different modeling choices affect fairness and accuracy. You will edit code, add data, run experiments, and write a short model card reflection.
+This project is an applied AI learning system, not a production-ready emotional assessment tool.
 
-## Final Project Direction
+## Original Project
 
-This project extends the original Mood Machine starter lab into a reliability-focused applied AI system.
+Original project name: **The Mood Machine**.
 
-The final system will improve mood classification by adding:
-- a more specialized mood dataset
-- improved rule-based classification logic
-- machine learning comparison
-- confidence scoring
-- guardrails for uncertain or risky inputs
-- structured evaluation/testing
+The starter project introduced a simple text classifier for labeling short posts as `positive`, `negative`, `neutral`, or `mixed`. It began with a rule-based `MoodAnalyzer` and optional machine learning experiments using scikit-learn.
 
-Required AI feature selected: Reliability / Testing System.
+## Final System
 
-Supporting enhancement: Specialized model behavior through improved data and classification rules.
+The final system extends the starter lab into a reliability-focused applied AI project. It includes:
 
-## Reliability and Evaluation
+- An expanded mood dataset in `dataset.py`
+- A rule-based `MoodAnalyzer` using word matching
+- A machine learning classifier using `CountVectorizer` and Logistic Regression
+- Confidence scoring for both systems
+- A rule-based guardrail that returns `uncertain` for low-confidence predictions
+- `evaluator.py` for accuracy and average-confidence reporting
+- A system architecture diagram in `assets/system_architecture.md`
+- A completed reflection and model card in `model_card.md`
 
-This system includes a reliability layer to ensure predictions are not only generated, but also evaluated and explained.
+AI feature selected: **Reliability / Testing System**.
 
-Key additions:
-
-- Confidence scoring:
-  Both the rule-based and ML models return a confidence value for each prediction.
-  - Rule-based confidence is based on the difference between positive and negative scores.
-  - ML confidence is based on predicted probabilities.
-
-- Guardrails:
-  The rule-based model returns "uncertain" when confidence is too low, preventing unreliable predictions.
-
-- Evaluation script:
-  The project includes an evaluator script that:
-  - runs both models on the dataset
-  - prints predictions, true labels, and confidence scores
-  - computes accuracy and average confidence
-
-These additions allow the system to demonstrate reliability, transparency, and measurable performance rather than just producing outputs.
-
-## System Architecture
+## Architecture Overview
 
 The system architecture is documented in `assets/system_architecture.md`.
 
-At a high level, the system takes a short text input and sends it through two mood classification paths:
+At a high level, text input flows through two classification paths:
 
-- A rule-based classifier using word matching, confidence scoring, and guardrails.
-- A machine learning classifier using CountVectorizer and Logistic Regression.
+- Rule-based path: preprocessing, word matching, confidence scoring, and a low-confidence guardrail
+- ML path: `CountVectorizer`, Logistic Regression, predicted label, and probability-based confidence
 
-The evaluator compares both systems against the labeled dataset, reports accuracy and average confidence, and supports human review for model-card reflection.
+The evaluator compares both systems against the labeled dataset, prints prediction logs, and reports accuracy plus average confidence for human review.
 
----
-
-## Repo Structure
+## Repository Structure
 
 ```plaintext
-├── dataset.py         # Starter word lists and example posts (you will expand these)
-├── mood_analyzer.py   # Rule based classifier with TODOs to improve
-├── main.py            # Runs the rule based model and interactive demo
-├── ml_experiments.py  # (New) A tiny ML classifier using scikit-learn
-├── model_card.md      # Template to fill out after experimenting
-└── requirements.txt   # Dependencies for optional ML exploration
+dataset.py                    # Expanded word lists and labeled mood examples
+mood_analyzer.py              # Rule-based classifier, confidence scoring, and guardrails
+main.py                       # Rule-based evaluation and interactive demo
+ml_experiments.py             # ML classifier and ML confidence prediction
+evaluator.py                  # Reliability evaluation for both systems
+model_card.md                 # Final model card and reflection
+requirements.txt              # Python dependencies
+assets/system_architecture.md # Mermaid system architecture diagram
 ```
 
----
+## Setup
 
-## Getting Started
+1. Create or activate a Python environment.
+2. Install dependencies:
 
-1. Open this folder in VS Code.
-2. Make sure your Python environment is active.
-3. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+The ML and evaluator scripts require `scikit-learn`.
 
-4. Run the rule-based starter:
+## How to Run
 
-    ```bash
-    python main.py
-    ```
+Run the rule-based demo:
 
-If pieces of the analyzer are not implemented yet, you will see helpful errors that guide you to the TODOs.
+```bash
+python main.py
+```
 
-To try the ML model later, run:
+Run the ML experiment:
 
 ```bash
 python ml_experiments.py
 ```
 
----
+Run the reliability evaluator:
 
-## What You Will Do
+```bash
+python evaluator.py
+```
 
-During this lab you will:
+## Sample Interactions
 
-- Implement the missing parts of the rule based `MoodAnalyzer`.
-- Add new positive and negative words.
-- Expand the dataset with more posts, including slang, emojis, sarcasm, or mixed emotions.
-- Observe unusual or incorrect predictions and think about why they happen.
-- Train a tiny machine learning model and compare its behavior to your rule based system.
-- Complete the model card with your findings about data, behavior, limitations, and improvements.
-- The goal is to help you reason about how models behave, how data shapes them, and why even small design choices matter.
+Example rule-based interactions:
 
----
+```plaintext
+Input: I am tired and overwhelmed
+Output: negative
 
-## Tips
+Input: This is fine
+Output: neutral
 
-- Start with preprocessing before updating scoring rules.
-- When debugging, print tokens, scores, or intermediate choices.
-- Ask an AI assistant to help create edge case posts or unusual wording.
-- Try examples that mislead or confuse your model. Failure cases teach you the most.
+Input: I love this class so much
+Output: uncertain
+```
+
+The third example shows the guardrail behavior: the rule-based model detects a positive word, but its confidence is low because the sentence has several tokens and only one direct mood match.
+
+## Design Decisions
+
+- The rule-based model stays simple and interpretable so its behavior can be inspected.
+- Confidence scoring was added to make prediction reliability visible.
+- The `uncertain` guardrail prevents low-confidence rule-based predictions from being treated as strong labels.
+- The ML model uses a small bag-of-words pipeline to provide a clear comparison with the rule-based approach.
+- Evaluation reports both accuracy and average confidence because accuracy alone does not show how certain the systems are.
+
+## Testing Summary
+
+Known evaluator results:
+
+- Rule-based accuracy: `0.50`
+- Rule-based average confidence: `0.16`
+- ML accuracy: `1.00`
+- ML average confidence: `0.71`
+
+The ML accuracy is training-set accuracy because the model is evaluated on the same examples it was trained on. It is not proof of real-world generalization.
+
+## Limitations
+
+- The dataset is small and manually labeled.
+- The rule-based model depends on exact word matches.
+- Sarcasm, negation, punctuation, and ambiguous emotional language remain difficult.
+- The ML model may overfit because there is no separate test set yet.
+- The system should not be used for high-stakes emotional, mental-health, academic, hiring, or disciplinary decisions.
+
+## Reflection
+
+This project showed that reliability is more than producing a label. Adding confidence scores, guardrails, and an evaluator made it easier to see where the system was uncertain and where accuracy numbers could be misleading. The strongest lesson was that the ML model's perfect score on the current dataset should be treated carefully because it reflects training-set performance, while the rule-based model is easier to inspect but less flexible.
+
+## Loom Walkthrough
+
+Loom video: [Add Loom walkthrough link here]
